@@ -1,298 +1,39 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0d0f12" />
-  <title>Lineform — Bambu drawing studio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101114">
+  <title>Lineform v3 — Drawing G-code studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand" aria-label="Lineform home">
-      <span class="brand-mark">L</span>
-      <span>lineform</span>
-    </div>
-
-    <div class="topbar-status">
-      <span class="status-dot"></span>
-      <span>DRAWING WORKSPACE</span>
-    </div>
-
-    <label class="printer-select" for="printerSelect">
-      <span>PRINTER</span>
-      <select id="printerSelect" aria-label="Select printer">
-        <option value="a1mini">Bambu Lab A1 mini</option>
-        <option value="a1">Bambu Lab A1</option>
-        <option value="p1">Bambu Lab P1P / P1S</option>
-        <option value="x1">Bambu Lab X1 Carbon</option>
-      </select>
-      <span class="chevron">▾</span>
-    </label>
-  </header>
-
-  <main class="app-shell">
-    <section class="workspace">
-      <div class="workspace-header">
-        <div>
-          <div class="eyebrow">PLOTTER STUDIO <span class="line"></span> 01 / 01</div>
-          <h1>Make something <em>drawn.</em></h1>
-          <p>Turn text, image, and PDF content into Bambu-ready drawing G-code.</p>
-        </div>
-        <button id="shareBtn" class="secondary-button">↗ Share</button>
-      </div>
-
-      <div class="modebar" role="tablist" aria-label="Choose artwork source">
-        <button class="mode-tab active" data-mode="text" role="tab" aria-selected="true"><span class="tab-icon">T</span>Text</button>
-        <button class="mode-tab" data-mode="image" role="tab" aria-selected="false"><span class="tab-icon">▧</span>Image</button>
-        <button class="mode-tab" data-mode="pdf" role="tab" aria-selected="false"><span class="tab-icon">▤</span>PDF</button>
-        <span class="modebar-note">LIVE STUDIO</span>
-      </div>
-
-      <div class="editor-card">
-        <div class="editor-header">
-          <div class="status-wrap">
-            <span class="status-dot"></span>
-            <span id="editorLabel">TEXT COMPOSER</span>
-          </div>
-          <span id="bedLabel" class="mono-label">180 × 180 mm BED</span>
-        </div>
-
-        <div id="textPanel" class="source-panel">
-          <textarea id="textInput" spellcheck="false" placeholder="Write something worth drawing…">Make good things</textarea>
-          <div class="text-meta">
-            <span>Line breaks are preserved</span>
-            <span id="charCount">17 / 120</span>
-          </div>
-        </div>
-
-        <div id="imagePanel" class="source-panel hidden">
-          <div class="upload-box" id="dropZone">
-            <div class="upload-glyph">↑</div>
-            <div class="upload-title" id="uploadTitle">Drop an image here</div>
-            <div class="upload-help" id="uploadHelp">PNG, JPG, WEBP · or browse</div>
-            <button id="browseBtn" class="ghost-button" type="button">Browse files</button>
-            <input id="fileInput" type="file" accept="image/*,.pdf" hidden />
-          </div>
-          <div id="fileInfo" class="file-info hidden">
-            <span class="file-badge">IMG</span>
-            <span id="fileName">artwork.png</span>
-            <button id="removeFile" class="remove-button" type="button" aria-label="Remove file">×</button>
-          </div>
-        </div>
-
-        <div class="editor-footer">
-          <div class="font-controls">
-            <label>
-              FONT
-              <select id="fontSelect">
-                <option value="Space Grotesk">Space Grotesk</option>
-                <option value="DM Sans">DM Sans</option>
-                <option value="serif">serif</option>
-                <option value="monospace">monospace</option>
-              </select>
-            </label>
-
-            <label>
-              SIZE
-              <span id="fontSizeValue">34</span>
-              <input id="fontSize" type="range" min="12" max="72" value="34" />
-            </label>
-
-            <label class="check-row">
-              <input id="boldToggle" type="checkbox" checked />
-              <span>Bold</span>
-            </label>
-          </div>
-
-          <div class="tool-controls">
-            <label>
-              TOOL
-              <select id="toolTypeSelect">
-                <option value="pen">Pen</option>
-                <option value="pencil">Pencil</option>
-              </select>
-            </label>
-
-            <label>
-              MODE
-              <select id="outputModeSelect">
-                <option value="mono">Black &amp; white</option>
-                <option value="color">Color split</option>
-              </select>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="preview-header">
-        <div>
-          <div class="eyebrow">LIVE PREVIEW <span class="line"></span></div>
-          <h2>Your build plate</h2>
-        </div>
-
-        <div class="preview-actions">
-          <button id="fitBtn" class="small-icon" type="button">⤢</button>
-          <button id="gridToggle" class="small-icon active" type="button">▦</button>
-          <span class="small-word">FIT</span>
-        </div>
-      </div>
-
-      <div class="preview-card">
-        <div class="canvas-area">
-          <canvas id="previewCanvas" aria-label="Toolpath preview"></canvas>
-          <div id="emptyPreview" class="empty-state hidden">
-            <div class="plus">＋</div>
-            <span>ADD ARTWORK TO SEE PREVIEW</span>
-          </div>
-        </div>
-
-        <div class="legend">
-          <span><i class="line-dot"></i> Tool path</span>
-          <span><i class="plate-dot"></i> Build plate</span>
-          <span id="dimText">180 × 180 mm</span>
-        </div>
-      </div>
-
-      <div class="footer-note">
-        <span class="note-badge">i</span>
-        <span>Built for a pen or pencil attachment on a Bambu printer. Always confirm paper setup, Z height, and pause/resume behavior before running a real print.</span>
-      </div>
+  <header class="topbar"><a class="brand" href="#" aria-label="Lineform home"><span class="brand-mark">L</span><span>lineform<span class="brand-dot">.</span></span><span class="version">V3</span></a><div class="topbar-status"><i></i> DRAWING WORKSPACE</div><label class="printer-select"><span>PRINTER BED</span><select id="printerSelect" aria-label="Select printer"><option value="a1mini">Bambu Lab A1 mini · 180 × 180</option><option value="a1">Bambu Lab A1 · 256 × 256</option><option value="p1">Bambu Lab P1P / P1S · 256 × 256</option><option value="x1">Bambu Lab X1 Carbon · 256 × 256</option></select></label></header>
+  <main class="layout">
+    <section class="work-area">
+      <header class="page-heading"><div><div class="eyebrow">PLOTTER STUDIO <span></span> V3.0</div><h1>Make something <em>drawn.</em></h1><p>From your idea to a pen-plotter toolpath.</p></div><button id="shareBtn" class="quiet-btn">↗ Share</button></header>
+      <nav class="source-tabs" role="tablist" aria-label="Artwork source"><button class="source-tab active" data-mode="text" role="tab" aria-selected="true">T&nbsp; Text</button><button class="source-tab" data-mode="image" role="tab" aria-selected="false">▧&nbsp; Image</button><button class="source-tab" data-mode="pdf" role="tab" aria-selected="false">▤&nbsp; PDF</button></nav>
+      <section class="editor-card"><div class="card-head"><span><i class="status-dot"></i><b id="editorLabel">TEXT COMPOSER</b></span><small id="bedLabel">180 × 180 MM BED</small></div>
+        <div id="textPanel" class="input-panel"><textarea id="textInput" maxlength="240" placeholder="Write something worth drawing…">Make good things</textarea><div class="text-meta"><span>Line breaks are preserved</span><span id="charCount">17 / 240</span></div></div>
+        <div id="uploadPanel" class="input-panel hidden"><div id="dropZone" class="drop-zone"><div class="upload-icon">↑</div><strong id="uploadTitle">Drop an image here</strong><small id="uploadHelp">PNG, JPG, WEBP · or browse files</small><button type="button" class="outline-btn" id="browseBtn">Browse files <span>↗</span></button><input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp" hidden></div><div id="fileInfo" class="file-info hidden"><span class="file-type">FILE</span><span id="fileName">artwork.png</span><button type="button" id="removeFile" aria-label="Remove file">×</button></div><p id="processStatus" class="process-status">Images are processed locally in your browser.</p></div>
+        <div class="editor-tools"><div id="fontControls" class="font-controls"><label>FONT<select id="fontSelect"><option value="Space Grotesk">Space Grotesk</option><option value="DM Sans">DM Sans</option><option value="serif">Serif</option><option value="monospace">Monospace</option></select></label><label>SIZE <b id="fontSizeOut">34</b><input id="fontSize" type="range" min="12" max="72" value="34"></label><label class="inline-check"><input id="boldToggle" type="checkbox" checked> Bold</label></div><div class="helper-text">Preview updates automatically</div></div>
+      </section>
+      <header class="preview-head"><div><div class="eyebrow">LIVE PREVIEW</div><h2>Build plate</h2><p>Drag the artwork to move it. Use the corner handle to scale.</p></div><div class="preview-actions"><button id="centerBtn" class="small-btn" title="Center artwork">⊙ Center</button><button id="gridBtn" class="small-btn active" title="Toggle grid">▦ Grid</button></div></header>
+      <section class="preview-card"><div class="canvas-wrap"><canvas id="previewCanvas" aria-label="Drawing and build plate preview"></canvas><div id="emptyPreview" class="empty-preview hidden">Your drawing will appear here</div></div><div class="preview-legend"><span><i class="legend-path"></i> Toolpath</span><span><i class="legend-bed"></i> Build area</span><span id="previewDimensions">180 × 180 mm</span></div></section>
+      <aside class="safety-note"><b>Printer compatibility</b><span>For a pen or pencil attachment only. This creates generic plotter-style G-code, not a printer-ready Bambu job. Add/verify your machine's startup, coordinate limits, tool clearance, and pause commands. This page cannot detect paper or automatically level a surface.</span></aside>
     </section>
-
-    <aside class="settings-panel">
-      <div class="settings-header">
-        <div>
-          <div class="eyebrow">TOOLPATH SETTINGS</div>
-          <h2>Fine-tune it.</h2>
-        </div>
-        <div class="settings-number">02</div>
-      </div>
-
-      <section class="setting-group">
-        <div class="group-head">
-          <h3>Artwork size</h3>
-          <span>B</span>
-        </div>
-
-        <div class="two-fields">
-          <label>
-            WIDTH
-            <span class="field-unit">mm</span>
-            <input id="widthInput" type="number" min="20" max="256" value="180" />
-          </label>
-
-          <label>
-            HEIGHT
-            <span class="field-unit">mm</span>
-            <input id="heightInput" type="number" min="20" max="256" value="180" />
-          </label>
-        </div>
-      </section>
-
-      <section class="setting-group">
-        <div class="group-head">
-          <h3>Line detail</h3>
-          <span>C</span>
-        </div>
-
-        <label class="range-row">
-          <span>Line density</span>
-          <b id="densityValue">1.2</b>
-          <input id="densityInput" type="range" min="0.6" max="3" step="0.1" value="1.2" />
-        </label>
-
-        <label class="range-row">
-          <span>Shading strength</span>
-          <b id="shadingValue">65%</b>
-          <input id="shadingInput" type="range" min="20" max="100" step="5" value="65" />
-        </label>
-      </section>
-
-      <section class="setting-group">
-        <div class="group-head">
-          <h3>Placement &amp; surface</h3>
-          <span>D</span>
-        </div>
-
-        <div class="two-fields">
-          <label>
-            X OFFSET
-            <input id="xInput" type="number" value="0" />
-          </label>
-          <label>
-            Y OFFSET
-            <input id="yInput" type="number" value="0" />
-          </label>
-        </div>
-
-        <div class="toggle-row">
-          <label class="switch">
-            <input id="autoLevelToggle" type="checkbox" checked />
-            <span class="slider"></span>
-          </label>
-          <span>Auto-level on surface</span>
-        </div>
-
-        <label class="range-row">
-          <span>Surface offset</span>
-          <b id="surfaceValue">0.00 mm</b>
-          <input id="surfaceInput" type="range" min="-2" max="2" step="0.05" value="0" />
-        </label>
-      </section>
-
-      <section class="setting-group">
-        <div class="group-head">
-          <h3>Motion</h3>
-          <span>E</span>
-        </div>
-
-        <div class="two-fields">
-          <label>
-            DRAW FEED
-            <input id="drawFeed" type="number" min="200" max="2400" value="900" />
-          </label>
-          <label>
-            TRAVEL FEED
-            <input id="travelFeed" type="number" min="500" max="5000" value="2400" />
-          </label>
-        </div>
-
-        <div class="two-fields">
-          <label>
-            DRAW Z
-            <input id="drawZ" type="number" min="-3" max="10" step="0.05" value="0.0" />
-          </label>
-          <label>
-            TRAVEL Z
-            <input id="travelZ" type="number" min="0" max="20" step="0.5" value="5" />
-          </label>
-        </div>
-      </section>
-
-      <div class="estimate-card">
-        <div class="estimate-top">
-          <span>ESTIMATED DRAW TIME</span>
-          <span class="estimate-spark">✳</span>
-        </div>
-        <div id="timeEstimate" class="estimate-value">— <small>min</small></div>
-      </div>
-
-      <button id="downloadBtn" class="download-button" type="button">↓ Download G-code <small>.gcode</small></button>
-      <button id="downloadColorBtn" class="secondary-button hidden" type="button">↓ Download color layers</button>
-
-      <div class="disclaimer">
-        Preview and time are estimates. Verify the generated G-code, especially Z moves and pause triggers before sending to the printer.
-      </div>
+    <aside class="settings-panel"><header class="settings-heading"><div><div class="eyebrow">TOOLPATH SETTINGS</div><h2>Fine-tune it.</h2></div><span>01</span></header>
+      <section class="setting-group"><div class="group-title"><h3>Output &amp; tool</h3><span>A</span></div><div class="segmented" role="group" aria-label="Output mode"><button id="monoBtn" class="segment active">B &amp; W</button><button id="colorBtn" class="segment">COLOR</button></div><label class="field-label">DRAWING TOOL<select id="toolSelect"><option value="pen">Pen · clean linework</option><option value="pencil">Pencil · shaded sketch</option></select></label><label class="check-line"><input id="fastRoute" type="checkbox" checked><span>Optimize route for speed</span></label><p class="hint" id="modeHint">Image uploads automatically use color separation. You can change output mode above.</p></section>
+      <section class="setting-group"><div class="group-title"><h3>Artwork size &amp; placement</h3><span>B</span></div><div class="field-grid"><label class="field-label">WIDTH <small>mm</small><input id="widthInput" type="number" min="10" value="125"></label><label class="field-label">HEIGHT <small>mm</small><input id="heightInput" type="number" min="10" value="80"></label></div><div class="field-grid offset-fields"><label class="field-label">X POSITION <small>mm</small><input id="xInput" type="number" min="0" value="27"></label><label class="field-label">Y POSITION <small>mm</small><input id="yInput" type="number" min="0" value="50"></label></div></section>
+      <section class="setting-group"><div class="group-title"><h3>Detail &amp; shading</h3><span>C</span></div><label class="range-control"><span>Line spacing <b id="densityOut">1.00 mm</b></span><input id="densityInput" type="range" min="0.35" max="2.5" step="0.05" value="1"><small><span>Fine detail</span><span>Fast</span></small></label><label class="range-control"><span>Image threshold <b id="thresholdOut">150</b></span><input id="thresholdInput" type="range" min="30" max="230" value="150"><small><span>More detail</span><span>Less detail</span></small></label><label class="range-control" id="shadingControl"><span>Pencil shading <b id="shadingOut">60%</b></span><input id="shadingInput" type="range" min="20" max="100" step="5" value="60"><small><span>Light</span><span>Dark</span></small></label><label class="check-line"><input id="invertToggle" type="checkbox"><span>Invert image</span></label></section>
+      <section class="setting-group"><div class="group-title"><h3>Surface &amp; motion</h3><span>D</span></div><button id="surfaceBtn" class="surface-button"><span>⌖</span><span><b>Manual surface setup</b><small>Set paper position and pen height</small></span><span class="surface-arrow">↗</span></button><p class="hint">Auto-leveling is not available in a browser without machine sensors or a printer connection.</p><div class="field-grid"><label class="field-label">DRAW FEED <small>mm/min</small><input id="drawFeed" type="number" min="100" max="2400" value="900"></label><label class="field-label">TRAVEL FEED <small>mm/min</small><input id="travelFeed" type="number" min="300" max="4800" value="2400"></label></div><details class="advanced"><summary>Advanced Z &amp; pause</summary><div class="field-grid"><label class="field-label">DRAW Z <small>mm</small><input id="drawZ" type="number" step="0.1" value="0"></label><label class="field-label">TRAVEL Z <small>mm</small><input id="travelZ" type="number" step="0.1" value="5"></label></div><label class="field-label">COLOR PAUSE COMMAND<input id="pauseCommand" type="text" value="M400 U1"></label><p class="hint">Check that this pause command is supported by your firmware before use.</p></details></section>
+      <section class="estimate-card"><div class="estimate-top"><span>ESTIMATED DRAW TIME</span><span>✳</span></div><div class="estimate-value" id="timeEstimate">— <small>min</small></div><p id="pathSummary">Add text or artwork to estimate</p><div class="estimate-meter"><i id="meterFill"></i></div><div class="estimate-foot"><span>TOOLPATH LENGTH</span><b id="distanceEstimate">— mm</b></div></section>
+      <button id="generateBtn" class="generate-btn">✦ &nbsp; Generate G-code</button><button id="downloadBtn" class="download-btn" disabled>↓ &nbsp; Download G-code <small>.gcode</small></button><button id="downloadColorBtn" class="secondary-button hidden">Download separate color files</button>
+      <p class="disclaimer">Estimates are approximate. Inspect the downloaded file and test with the machine safely clear of the bed before drawing.</p>
     </aside>
   </main>
-
+  <dialog id="surfaceDialog"><form method="dialog"><button class="dialog-x" aria-label="Close">×</button><div class="eyebrow">MANUAL SURFACE SETUP</div><h2>Set the drawing height</h2><p>Paper and notebooks cannot be sensed by this web app. Align the surface using your printer controls, then enter an experimentally verified safe drawing Z.</p><label class="field-label">DRAW Z OFFSET (mm)<input id="calibrationZ" type="number" step="0.1" value="0"></label><div class="dialog-buttons"><button type="button" id="cancelSurface" class="outline-btn">Cancel</button><button type="button" id="saveSurface" class="generate-btn">Save setting</button></div></form></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
   <script src="app.js"></script>
 </body>
 </html>
